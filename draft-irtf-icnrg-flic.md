@@ -1,12 +1,12 @@
 ---
 title: File-Like ICN Collection (FLIC)
 abbrev: ICN-FLIC
-docname: draft-icnrg-flic-latest
+docname: draft-irtf-icnrg-flic-latest
 category: info
 
 ipr: trust200902
 area: General
-workgroup: ICNRG Working Group
+workgroup: ICNRG
 keyword: Internet-Draft
 
 stand_alone: yes
