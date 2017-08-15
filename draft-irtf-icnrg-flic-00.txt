@@ -2,15 +2,15 @@
 
 
 
-ICNRG Working Group                                          C. Tschudin
+ICNRG                                                        C. Tschudin
 Internet-Draft                                       University of Basel
 Intended status: Informational                                   C. Wood
-Expires: December 27, 2017               University of California Irvine
-                                                           June 25, 2017
+Expires: December 28, 2017               University of California Irvine
+                                                           June 26, 2017
 
 
                     File-Like ICN Collection (FLIC)
-                        draft-icnrg-flic-latest
+                        draft-irtf-icnrg-flic-00
 
 Abstract
 
@@ -38,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 27, 2017.
+   This Internet-Draft will expire on December 28, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Tschudin & Wood         Expires December 27, 2017               [Page 1]
+Tschudin & Wood         Expires December 28, 2017               [Page 1]
 
 Internet-Draft                  ICN-FLIC                       June 2017
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Tschudin & Wood         Expires December 27, 2017               [Page 2]
+Tschudin & Wood         Expires December 28, 2017               [Page 2]
 
 Internet-Draft                  ICN-FLIC                       June 2017
 
@@ -165,7 +165,7 @@ Internet-Draft                  ICN-FLIC                       June 2017
 
 
 
-Tschudin & Wood         Expires December 27, 2017               [Page 3]
+Tschudin & Wood         Expires December 28, 2017               [Page 3]
 
 Internet-Draft                  ICN-FLIC                       June 2017
 
@@ -221,7 +221,7 @@ Internet-Draft                  ICN-FLIC                       June 2017
 
 
 
-Tschudin & Wood         Expires December 27, 2017               [Page 4]
+Tschudin & Wood         Expires December 28, 2017               [Page 4]
 
 Internet-Draft                  ICN-FLIC                       June 2017
 
@@ -277,7 +277,7 @@ Internet-Draft                  ICN-FLIC                       June 2017
 
 
 
-Tschudin & Wood         Expires December 27, 2017               [Page 5]
+Tschudin & Wood         Expires December 28, 2017               [Page 5]
 
 Internet-Draft                  ICN-FLIC                       June 2017
 
@@ -333,7 +333,7 @@ Internet-Draft                  ICN-FLIC                       June 2017
 
 
 
-Tschudin & Wood         Expires December 27, 2017               [Page 6]
+Tschudin & Wood         Expires December 28, 2017               [Page 6]
 
 Internet-Draft                  ICN-FLIC                       June 2017
 
@@ -389,7 +389,7 @@ Internet-Draft                  ICN-FLIC                       June 2017
 
 
 
-Tschudin & Wood         Expires December 27, 2017               [Page 7]
+Tschudin & Wood         Expires December 28, 2017               [Page 7]
 
 Internet-Draft                  ICN-FLIC                       June 2017
 
@@ -445,7 +445,7 @@ Internet-Draft                  ICN-FLIC                       June 2017
 
 
 
-Tschudin & Wood         Expires December 27, 2017               [Page 8]
+Tschudin & Wood         Expires December 28, 2017               [Page 8]
 
 Internet-Draft                  ICN-FLIC                       June 2017
 
@@ -501,7 +501,7 @@ Internet-Draft                  ICN-FLIC                       June 2017
 
 
 
-Tschudin & Wood         Expires December 27, 2017               [Page 9]
+Tschudin & Wood         Expires December 28, 2017               [Page 9]
 
 Internet-Draft                  ICN-FLIC                       June 2017
 
@@ -557,7 +557,7 @@ Internet-Draft                  ICN-FLIC                       June 2017
 
 
 
-Tschudin & Wood         Expires December 27, 2017              [Page 10]
+Tschudin & Wood         Expires December 28, 2017              [Page 10]
 
 Internet-Draft                  ICN-FLIC                       June 2017
 
@@ -613,7 +613,7 @@ Internet-Draft                  ICN-FLIC                       June 2017
 
 
 
-Tschudin & Wood         Expires December 27, 2017              [Page 11]
+Tschudin & Wood         Expires December 28, 2017              [Page 11]
 
 Internet-Draft                  ICN-FLIC                       June 2017
 
@@ -669,7 +669,7 @@ Internet-Draft                  ICN-FLIC                       June 2017
 
 
 
-Tschudin & Wood         Expires December 27, 2017              [Page 12]
+Tschudin & Wood         Expires December 28, 2017              [Page 12]
 
 Internet-Draft                  ICN-FLIC                       June 2017
 
@@ -725,7 +725,7 @@ Internet-Draft                  ICN-FLIC                       June 2017
 
 
 
-Tschudin & Wood         Expires December 27, 2017              [Page 13]
+Tschudin & Wood         Expires December 28, 2017              [Page 13]
 
 Internet-Draft                  ICN-FLIC                       June 2017
 
@@ -781,7 +781,7 @@ Authors' Addresses
 
 
 
-Tschudin & Wood         Expires December 27, 2017              [Page 14]
+Tschudin & Wood         Expires December 28, 2017              [Page 14]
 
 Internet-Draft                  ICN-FLIC                       June 2017
 
@@ -837,4 +837,4 @@ Internet-Draft                  ICN-FLIC                       June 2017
 
 
 
-Tschudin & Wood         Expires December 27, 2017              [Page 15]
+Tschudin & Wood         Expires December 28, 2017              [Page 15]
