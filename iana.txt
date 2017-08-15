@@ -1,0 +1,15 @@
+# IANA Considerations
+
+This document requires a newly allocated CCNx Message Type with the integer value 0x06.
+Within this namespace, it requires the following types.
+
+- T_HASHGROUP: 0x00
+- T_BLOCKHASHGROUP: 0x01
+- T_HASHGROUP_METADATA: 0x00
+- T_HASHGROUP_METADATA_BYTECOUNT: 0x00
+- T_HASHGROUP_METADATA_LOCATOR: 0x01
+- T_HASHGROUP_METADATA_DATADIGEST: 0x02
+- T_HASHGROUP_SIZEDATAPTR: 0x01
+- T_HASHGROUP_SIZEMANIFESTPTR: 0x02
+- T_HASHGROUP_DATAPTR: 0x03
+- T_HASHGROUP_MANIFESTPTR: 0x04

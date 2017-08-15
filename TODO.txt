@@ -1,0 +1,12 @@
+- Introduction text
+- Security analysis
+    - hash agility
+    - encryption -- when, where, how?
+    - partial re-signing
+    - etc.
+- Add extensibility as a design goal, and describe how it's done
+- Generalize use of nameless objects (so that it works with NDN and CCN)
+- Encoding cleanup
+- "HashGroup can contain a metadata section" is underspecified
+- s/download/fetch
+- Define manifest term at the beginning, and make it clear this is a network manifest, not an application manifest  
