@@ -112,23 +112,26 @@ File-Like ICN Collection (FLIC) Format
 We first give the FLIC format in EBN notation:
 
 ~~~
-   ManifestMsg := Name? HashGroup+
+   Node := Name? Metadata? (Opqaue | HashGroup+)
 
-   HashGroup   := MetaData? (SizeDataPtr | SizeManifestPtr)+
-   BlockHashGroup := MetaData? SizePerPtr (DataPtr | ManifestPtr)+
+   HashGroup   := MetaData? Ptr+
 
-   DataPtr := HashValue
-   ManifestPtr := HashValue
-   SizeDataPtr := Size HashValue
-   SizeManifestPtr := Size HashValue
+   Ptr := HashValue
 
-   SizePerPtr    := Size
    HashValue     := See {{CCNxMessages}}
-   Size          := OCTET[8]
 
    MetaData    := Property*
-   Property    := Locator | OverallByteCount | OverallDataDigest | ...
+   Property    := SizePerPtr | Locator | OverallByteCount | OverallDataDigest | ...
 ~~~
+
+TODO(caw): extensible properties that implementors may consider
+- media type
+- timestamp
+- security context
+- author
+---> and encrypted variants of each type
+
+TODO(caw): maybe add some text explaining hash agility
 
 Description:
 
@@ -459,6 +462,8 @@ algorithm has to be called once more, seeking to seek_pos o inside that manifest
 
 Block-level de-duplication
 ----------------------------
+
+TODO(caw): maybe mention COW
 
 Consider a huge file, e.g. an ISO image of a DVD or program in binary
 form, that had previously been FLIC-ed but now needs to be patched.
