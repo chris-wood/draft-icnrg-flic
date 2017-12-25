@@ -58,7 +58,7 @@ data block or another index table node.
 Introduction
 ============
 
-ICN architectures such as Content-Centric Networking (CCN) {{ccnxsemantics}} and 
+ICN architectures such as Content-Centric Networking (CCN) {{I-D.irtf-icnrg-ccnxsemantics}} and 
 Named Data Networking {{NamedDataNetworking}} are well suited for static content
 distribution. Each piece of (possibly immutable) static content is assigned a name
 by its producer. Consumers fetch this content using said name. Optionally, consumers
@@ -139,7 +139,7 @@ File-Like ICN Collection (FLIC) Format
 
 The core of a FLIC node is the sequence of "hash groups". Each
 hash group (HG) consists of a sequence of pointers.
-Pointers are cryptographic HashValues encoded according {{CCNxMessages}}. 
+Pointers are cryptographic HashValues encoded according {{I-D.irtf-icnrg-ccnxmessages}}. 
 Specifically, a HashValue specifies a hash algorithm and digest value.
 A HashGroup can contain a metadata section to help a reader to
 optimize content retrieval via, e.g., block size of leaf nodes, 
@@ -153,7 +153,7 @@ Based on this description, FLIC encoding in EBN notation is as follows:
 
    Ptr        := HashValue
 
-   HashValue  := See {{CCNxMessages}}
+   HashValue  := See {{I-D.irtf-icnrg-ccnxmessages}}
 
    MetaData   := Property*
    Property   := SizePerPtr | SecurityCtx | Locator | OverallByteCount | OverallDataDigest | ...
