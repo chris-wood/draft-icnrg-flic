@@ -25,7 +25,10 @@ author:
     email: woodc1@uci.edu
 
 normative:
-    CCNxMessages:
+    I-D.irtf-icnrg-ccnxmessages:
+    I-D.irtf-icnrg-ccnxsemantics:
+    I-D.irtf-icnrg-terminology:
+    NamedDataNetworking:
         target: https://datatracker.ietf.org/doc/draft-irtf-icnrg-ccnxmessages/
         title: CCNx Messages in TLV Format
         author:
@@ -55,10 +58,35 @@ data block or another index table node.
 Introduction
 ============
 
+ICN architectures such as Content-Centric Networking (CCN) {{I-D.irtf-icnrg-ccnxsemantics}} and 
+Named Data Networking {{NamedDataNetworking}} are well suited for static content
+distribution. Each piece of (possibly immutable) static content is assigned a name
+by its producer. Consumers fetch this content using said name. Optionally, consumers
+may specify the full name of content, which includes its name and a unique (with 
+overwhelming probability) cryptographic digest of said content. 
+(See {{I-D.irtf-icnrg-terminology}} for a formal definition of "full name".)
+
+To enable requests with full names, consumers need a priori knowledge of content digests. 
+Manifests, or catalogs, are data structures commonly proposed to transport this 
+information. Typically, manifests are signed content objects (data) which carry a 
+collection of hash digests. However, as content objects, manifests themselves may be
+fetched by full name. Thus, manifests may contain hash digests of, or pointers to,
+other manifests or content objects. A collection of manifests and content objects 
+represents a large piece of application data, e.g., one that cannot otherwise fit in 
+a single content object.
+
+Structurally, this relationship between manifests and content objects is reminiscent 
+of the UNIX inode concept with index tables and memory pointers. 
+In this document, we specify a simple, yet extensible, manifest data structure called
+FLIC -- File-Like ICN Collection. FLIC is suitable for ICNs such as CCN and NDN. We describe
+the FLIC design, grammar, and various use cases, e.g., seeking, de-duplication,
+extension, and variable-sized encoding. We also include FLIC encoding examples for CCN
+and NDN.
+
 FLIC as a Distributed Data Structure
 ------------------------------------
 
-One figure
+FLIC is a distributed data structure best illustrated by the following picture.
 
 ~~~
                           root manifest
@@ -69,9 +97,9 @@ One figure
   | HashGroup (HG):                    |
   |   optional metadata:               |
   |     overall digest, locator, etc.  |    .------.
-  |   hash-valued data pointer -----------> | data |
+  |   hash-valued (data) pointer ---------> | data |
   |     ...                            |    `------'  sub manifest
-  |   hash-valued manifest pointer ------.     .------------------.
+  |   hash-valued (manifest) pointer ----.     .------------------.
   |                                    |  `--> |                ----->
   | optional additional HashGroups ..  |       |                ----->
   |                                    |       `------------------'
@@ -109,52 +137,45 @@ Design goals
 File-Like ICN Collection (FLIC) Format
 ======================================
 
-We first give the FLIC format in EBN notation:
+The core of a FLIC node is the sequence of "hash groups". Each
+hash group (HG) consists of a sequence of pointers.
+Pointers are cryptographic HashValues encoded according {{I-D.irtf-icnrg-ccnxmessages}}. 
+Specifically, a HashValue specifies a hash algorithm and digest value.
+A HashGroup can contain a metadata section to help a reader to
+optimize content retrieval via, e.g., block size of leaf nodes, 
+total size, overall digest, etc.
+
+Based on this description, FLIC encoding in EBN notation is as follows:
 
 ~~~
-   ManifestMsg := Name? HashGroup+
+   Node       := Name? Metadata? (Opqaue | HashGroup+)
+   HashGroup  := MetaData? Ptr+
 
-   HashGroup   := MetaData? (SizeDataPtr | SizeManifestPtr)+
-   BlockHashGroup := MetaData? SizePerPtr (DataPtr | ManifestPtr)+
+   Ptr        := HashValue
 
-   DataPtr := HashValue
-   ManifestPtr := HashValue
-   SizeDataPtr := Size HashValue
-   SizeManifestPtr := Size HashValue
+   HashValue  := See {{I-D.irtf-icnrg-ccnxmessages}}
 
-   SizePerPtr    := Size
-   HashValue     := See {{CCNxMessages}}
-   Size          := OCTET[8]
-
-   MetaData    := Property*
-   Property    := Locator | OverallByteCount | OverallDataDigest | ...
+   MetaData   := Property*
+   Property   := SizePerPtr | SecurityCtx | Locator | OverallByteCount | OverallDataDigest | ...
 ~~~
 
-Description:
+Note that all sizes are 64-bit unsigned integers.
 
-* The core of a manifest is the sequence of "hash groups".
+A description of each field follows:
 
-* A HashGroup (HG) consists of a sequence of "sized" data or manifest pointers.
+* Node: A structure with optional name, metadata, and collection of hashgroups
+or an opaque, encrypted blob. Encrypted FLIC nodes are discussed in Section {{encryption}}.
+* HashGroup: A collection of pointers (Ptr) and optional metadata.
+* Ptr: A wrapper around a HashValue.
+* HashValue: A structure specifying hash algorithm and cryptographic hash digest.
+* MetaData: A collection of Property values.
+* Property: A well-defined FLIC extension. By default, SizePerPtr, SecurityCtx, Locator, OverallByteCount,
+and OverallDataDigest property extensions are supported. Each of these properties are
+described in more detail in Section {{metadata}}.
 
-* A BlockHashGroup (BHG) consists of a sequence of data or manifest pointers and
-a mandatory field that lists the total size of each pointer. These HashGroups
-should be used when each pointer (except the last) contains an identical number
-of application bytes.
-
-* Sizes are 64-bit unsigned integers.
-
-* Data and manifest pointers are cryptographic HashValues encoded according
-  to the mechanism listed in {{CCNxMessages}}. Specifically, a HashValue
-  specifies the cryptographic hash algorithm and the actual digest.
-
-* A HashGroup can contain a metadata section to help a reader to
-  optimize content retrieval (block size of leaf nodes, total size,
-  overall digest etc).
-
-* None of the ICN objects used in FLIC are allowed to be chunked,
-  including the (sub-) manifests. The smallest possible complete
-  manifest contains one HashGroup with one pointer to an ICN object.
-
+Lastly, no ICN objects used in FLIC are allowed to be chunked,
+including the (sub-) manifests. The smallest possible complete
+manifest contains one HashGroup with one pointer to an ICN object.
 
 Use of hash-valued pointers
 ---------------------------
@@ -311,19 +332,24 @@ The above DFS code works for FLIC manifest trees of arbitrary
 shape. In case of a skewed tree, no recursion is needed and a single
 instance of the DFS procedure suffices (i.e., one uses tail recursion).
 
-Metadata in HashGroups
-----------------------
+Metadata and Extensibility {#metadata}
+--------------------------------------
 
-In FLIC, metadata is linked to HashGroups and permits to inform the
-FLIC retriever about properties of the data that is covered by this hash
-group. Examples are overall data bytes or the overall hash digest (this is akin
+In FLIC, metadata is linked to FLIC nodes or HashGroups informs
+FLIC retrievers about data properties. 
+Example metadata includes overall data bytes and overall hash digest (this is akin
 to a Merkle hash). The intent of such metadata is to enable an in-network retriever
-to optimize its operation - other attributes linked to the collection as a whole
-(author, copyright, etc.) is out of scope.
+to optimize its operation.
 
 The list of available metadata is below.
 
 ~~~
+* SizePerPtr - size of application data encoded in each HashGroup pointer.
+
+* SecurityCtx - pointer to an application-specific security context blob.
+For example, this point to a content object carrying an encrypted symmetric
+key used to decrypt the parent FLIC node.
+
 * Locator - provides a new routing hint (name prefix) where the
   chunks of this hash group can be retrieved from. The default is to
   use the locator of the root manifest.
@@ -337,11 +363,26 @@ The list of available metadata is below.
   data contained in the HashGroup.
 ~~~
 
-BlockHashGroups contain a mandatory piece of metadata called the SizePerPtr.
+HashGroups SHOULD carry the SizePerPtr metadata property.
 This value indicates the total number of application bytes contained within
-each pointer in the hash group *except for the last pointer.* Normal HashGroups
-do not require this piece of metadata; Instead, each pointer includes their
-size explicitly.
+each pointer in the hash group *except for the last pointer.* 
+
+Applications MAY extend FLIC via new metadata values. Example extensions include: 
+media type, timestamp, author, copyright, etc. Each new metadata extension MUST 
+be allocated a unique codepoint to avoid parsing errors.
+
+FLIC Encryption {#encryption}
+-----------------------------
+
+FLIC nodes may be encrypted using an application-specific scheme. When encrypted with
+external keying material, FLICs SHOULD carry a SecurityCtx metadata value which points
+to application-specific keying material. Receivers SHOULD fetch this context and use
+it to obtain one or more keys needed to decrypt FLIC nodes. Upon decrypt, FLIC nodes
+MUST be parsed as plaintext FLIC nodes. That is, it is an error if FLIC node decryption
+yields a structure that is not a FLIC node. Receivers must be able to decrypt content objects 
+pointed to from an encrypted FLIC node using keying material associated with said FLIC node.
+(Recall that content objects do not carry any metadata fields, thus, any security-related
+information such as keying material must be delivered by parent FLIC nodes or some other means.)
 
 Locating FLIC leaf and manifest nodes
 -------------------------------------
